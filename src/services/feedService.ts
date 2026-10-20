@@ -1,16 +1,14 @@
 import { parseFeedXml, type ParseFeedOptions } from './feedParser';
 import type { FeedItem, FeedSource } from '../types/feed';
 
-async function fetchXmlWithTimeout(endpoint: string, timeoutMs = 10000): Promise<string> {
+async function fetchXmlWithTimeout(endpoint: string, timeoutMs = 8000): Promise<string> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
+    // Keep request as a CORS-simple GET (no custom headers) to avoid OPTIONS preflights
     const res = await fetch(endpoint, {
       signal: controller.signal,
-      headers: {
-        Accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*',
-      },
     });
 
     clearTimeout(timeoutId);
@@ -42,17 +40,17 @@ export async function fetchFeed(
   const cleanUrl = targetUrl.trim();
   const encoded = encodeURIComponent(cleanUrl);
 
-  // Use Vite's local proxy route during dev; on static hosts (GitHub Pages), use CORS proxies
+  const remoteProxies = [
+    `https://cors-anywhere.pulkitpareekofficial.workers.dev/?url=${encoded}`,
+    `https://dry-surf-6b16.joshua-ed.workers.dev/?url=${encoded}`,
+    `https://cors.luckydesigner.workers.dev/?${cleanUrl}`,
+    `https://api.allorigins.win/raw?url=${encoded}`,
+  ];
+
+  // Use Vite's local proxy route during dev; on static hosts (GitHub Pages), use fast Worker proxies
   const endpoints = import.meta.env.DEV
-    ? [
-        `/api/proxy?url=${encoded}`,
-        `https://api.allorigins.win/raw?url=${encoded}`,
-        `https://corsproxy.io/?url=${encoded}`,
-      ]
-    : [
-        `https://api.allorigins.win/raw?url=${encoded}`,
-        `https://corsproxy.io/?url=${encoded}`,
-      ];
+    ? [`/api/proxy?url=${encoded}`, ...remoteProxies]
+    : remoteProxies;
 
   let lastError: unknown;
   for (const endpoint of endpoints) {

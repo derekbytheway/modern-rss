@@ -309,7 +309,7 @@ export const CURATED_STARTER_FEEDS: OpmlOutlineItem[] = [
   },
   {
     title: 'Quanta Magazine',
-    xmlUrl: 'https://api.quantamagazine.org/v1/feed',
+    xmlUrl: 'https://www.quantamagazine.org/feed/',
     htmlUrl: 'https://www.quantamagazine.org',
     category: 'Science & Space',
   },
