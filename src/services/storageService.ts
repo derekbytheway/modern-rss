@@ -10,6 +10,7 @@ const STORAGE_KEYS = {
 export const DEFAULT_READER_PREFERENCES: ReaderPreferences = {
     fontFamily: 'sans',
     fontSize: 'base',
+    lineHeight: 'relaxed',
     maxWidth: 'comfort',
     theme: 'dark',
 };

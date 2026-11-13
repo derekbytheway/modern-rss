@@ -34,6 +34,7 @@ export interface OpmlOutlineItem {
 export interface ReaderPreferences {
     fontFamily: 'sans' | 'serif' | 'mono';
     fontSize: 'sm' | 'base' | 'lg' | 'xl';
+    lineHeight: 'tight' | 'normal' | 'relaxed' | 'loose';
     maxWidth: 'narrow' | 'comfort' | 'wide';
     theme: 'dark' | 'oled' | 'sepia' | 'light';
 }

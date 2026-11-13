@@ -75,10 +75,17 @@ const FONT_FAMILY_CLASSES: Record<ReaderPreferences['fontFamily'], string> = {
 };
 
 const FONT_SIZE_CLASSES: Record<ReaderPreferences['fontSize'], string> = {
-  sm: 'text-sm leading-relaxed',
-  base: 'text-base leading-relaxed',
-  lg: 'text-lg leading-relaxed',
-  xl: 'text-xl leading-loose',
+  sm: 'text-sm',
+  base: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl',
+};
+
+const LINE_HEIGHT_CLASSES: Record<ReaderPreferences['lineHeight'], string> = {
+  tight: 'leading-snug',
+  normal: 'leading-normal',
+  relaxed: 'leading-relaxed',
+  loose: 'leading-loose',
 };
 
 const MAX_WIDTH_CLASSES: Record<ReaderPreferences['maxWidth'], string> = {
@@ -363,6 +370,39 @@ export function ArticleReader({
                   </div>
                 </div>
 
+                {/* Line Height */}
+                <div className="space-y-1.5">
+                  <div className="text-[11px] font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wider">
+                    Line Height
+                  </div>
+                  <div id="reader-line-height-options" className="grid grid-cols-4 gap-1.5">
+                    {(
+                      [
+                        { id: 'tight', label: 'Tight' },
+                        { id: 'normal', label: 'Normal' },
+                        { id: 'relaxed', label: 'Relaxed' },
+                        { id: 'loose', label: 'Loose' },
+                      ] as const
+                    ).map((lh) => (
+                      <button
+                        id={`reader-line-height-${lh.id}`}
+                        key={lh.id}
+                        type="button"
+                        onClick={() =>
+                          onUpdatePreferences({ ...preferences, lineHeight: lh.id })
+                        }
+                        className={`py-1 rounded-md border text-[11px] transition-colors ${
+                          preferences.lineHeight === lh.id
+                            ? 'border-orange-500 bg-orange-500/15 text-orange-600 dark:text-orange-400 font-medium'
+                            : 'border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-[#121212] text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-neutral-200'
+                        }`}
+                      >
+                        {lh.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Column Width */}
                 <div className="space-y-1.5">
                   <div className="text-[11px] font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wider">
@@ -541,7 +581,7 @@ export function ArticleReader({
         <div
           id="reader-article-content"
           ref={contentContainerRef}
-          className={`prose max-w-none ${themeStyle.prose} ${themeStyle.text} ${FONT_SIZE_CLASSES[preferences.fontSize]} space-y-4 [&_a]:underline [&_img]:rounded-lg [&_img]:max-w-full [&_pre]:bg-gray-100 dark:[&_pre]:bg-gray-900 [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:overflow-x-auto [&_blockquote]:border-l-2 [&_blockquote]:border-orange-500/60 [&_blockquote]:pl-4 [&_blockquote]:italic`}
+          className={`prose max-w-none ${themeStyle.prose} ${themeStyle.text} ${FONT_SIZE_CLASSES[preferences.fontSize]} ${LINE_HEIGHT_CLASSES[preferences.lineHeight]} [&_p]:leading-[inherit] [&_li]:leading-[inherit] space-y-4 [&_a]:underline [&_img]:rounded-lg [&_img]:max-w-full [&_pre]:bg-gray-100 dark:[&_pre]:bg-neutral-900 [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:overflow-x-auto [&_blockquote]:border-l-2 [&_blockquote]:border-orange-500/60 [&_blockquote]:pl-4 [&_blockquote]:italic`}
         />
       </article>
     </main>
