@@ -35,8 +35,8 @@ const THEME_CLASSES: Record<
   }
 > = {
   dark: {
-    bg: 'bg-neutral-950',
-    headerBg: 'bg-neutral-950/90 border-neutral-800',
+    bg: 'bg-[#121212]',
+    headerBg: 'bg-[#121212]/90 border-neutral-800',
     text: 'text-neutral-300',
     heading: 'text-neutral-100',
     muted: 'text-neutral-400',
@@ -59,12 +59,12 @@ const THEME_CLASSES: Record<
     prose: 'prose-stone [&_a]:text-[#b45309]',
   },
   light: {
-    bg: 'bg-stone-50',
-    headerBg: 'bg-stone-100/95 border-stone-200',
-    text: 'text-stone-800',
-    heading: 'text-stone-950',
-    muted: 'text-stone-500',
-    prose: 'prose-stone [&_a]:text-orange-600',
+    bg: 'bg-white',
+    headerBg: 'bg-white/95 border-gray-200',
+    text: 'text-gray-800',
+    heading: 'text-gray-950',
+    muted: 'text-gray-500',
+    prose: 'prose-gray [&_a]:text-orange-600',
   },
 };
 
@@ -150,15 +150,21 @@ export function ArticleReader({
 
   if (!article) {
     return (
-      <main className="flex-1 h-screen flex flex-col items-center justify-center bg-neutral-950 text-neutral-500 text-sm p-8 text-center">
-        <div className="p-4 rounded-2xl bg-neutral-900/50 border border-neutral-800/80 mb-3">
-          <BookOpen className="w-7 h-7 text-orange-500/70" />
+      <main
+        id="article-reader-empty"
+        className="flex-1 h-screen flex flex-col items-center justify-center bg-white dark:bg-[#121212] text-gray-500 dark:text-neutral-400 text-sm p-8 text-center"
+      >
+        <div
+          id="article-reader-empty-icon"
+          className="p-4 rounded-2xl bg-gray-100 dark:bg-neutral-800/50 border border-gray-200 dark:border-neutral-800 mb-3"
+        >
+          <BookOpen className="w-7 h-7 text-orange-500/80" />
         </div>
-        <p className="font-medium text-neutral-300">Select an article to start reading</p>
-        <p className="text-xs text-neutral-500 mt-1">
-          Use <kbd className="px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800 font-mono text-[11px] text-orange-400">j</kbd> /{' '}
-          <kbd className="px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800 font-mono text-[11px] text-orange-400">k</kbd> to navigate or press{' '}
-          <kbd className="px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800 font-mono text-[11px] text-orange-400">?</kbd> for all shortcuts
+        <p className="font-medium text-gray-800 dark:text-neutral-200">Select an article to start reading</p>
+        <p className="text-xs text-gray-500 dark:text-neutral-400 mt-1">
+          Use <kbd className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-neutral-900 border border-gray-300 dark:border-neutral-800 font-mono text-[11px] text-orange-600 dark:text-orange-400">j</kbd> /{' '}
+          <kbd className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-neutral-900 border border-gray-300 dark:border-neutral-800 font-mono text-[11px] text-orange-600 dark:text-orange-400">k</kbd> to navigate or press{' '}
+          <kbd className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-neutral-900 border border-gray-300 dark:border-neutral-800 font-mono text-[11px] text-orange-600 dark:text-orange-400">?</kbd> for all shortcuts
         </p>
       </main>
     );
@@ -166,44 +172,49 @@ export function ArticleReader({
 
   return (
     <main
+      id="article-reader"
       ref={scrollContainerRef}
       onScroll={handleScroll}
       className={`flex-1 h-screen flex flex-col overflow-y-auto transition-colors duration-200 ${themeStyle.bg}`}
     >
       {/* Sticky Top Action Bar + Progress Indicator */}
       <div
+        id="reader-toolbar"
         className={`sticky top-0 z-10 border-b backdrop-blur-md ${themeStyle.headerBg}`}
       >
         {/* Reading Progress Bar */}
-        <div className="h-0.5 w-full bg-transparent overflow-hidden">
+        <div id="reader-progress-track" className="h-0.5 w-full bg-transparent overflow-hidden">
           <div
+            id="reader-progress-bar"
             className="h-full bg-orange-500 transition-all duration-100"
             style={{ width: `${scrollProgress}%` }}
           />
         </div>
 
-        <div className="flex items-center justify-between px-8 py-3">
-          <div className="flex items-center gap-3">
+        <div id="reader-toolbar-content" className="flex items-center justify-between px-8 py-3">
+          <div id="reader-toolbar-left" className="flex items-center gap-3">
             <a
+              id="reader-open-original-link"
               href={article.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs font-medium text-neutral-400 hover:text-orange-400 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-neutral-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
             >
               <span>Open Original</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
 
             <button
+              id="reader-copy-link-btn"
               type="button"
               onClick={handleCopyLink}
-              className="flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
+              className="flex items-center gap-1 text-xs text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200 transition-colors"
               title="Copy article link"
             >
               {copiedLink ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-emerald-400">Copied</span>
+                  <Check className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+                  <span className="text-emerald-600 dark:text-emerald-400">Copied</span>
                 </>
               ) : (
                 <>
@@ -214,15 +225,16 @@ export function ArticleReader({
             </button>
           </div>
 
-          <div className="flex items-center gap-2 relative">
+          <div id="reader-toolbar-right" className="flex items-center gap-2 relative">
             {/* Personal Note Button */}
             <button
+              id="reader-note-toggle-btn"
               type="button"
               onClick={() => setNoteOpen((v) => !v)}
               className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border transition-colors ${
                 article.note || noteOpen
-                  ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
-                  : 'border-neutral-800 text-neutral-400 hover:text-neutral-200'
+                  ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                  : 'border-gray-300 dark:border-neutral-800 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-neutral-200'
               }`}
               title="Add or edit personal reading note"
             >
@@ -232,12 +244,13 @@ export function ArticleReader({
 
             {/* Reader Typography & Theme Popover Toggle */}
             <button
+              id="reader-appearance-btn"
               type="button"
               onClick={() => setShowAppearanceMenu((v) => !v)}
               className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-md border transition-colors ${
                 showAppearanceMenu
-                  ? 'border-orange-500/50 bg-orange-500/10 text-orange-400'
-                  : 'border-neutral-800 text-neutral-400 hover:text-neutral-200'
+                  ? 'border-orange-500/50 bg-orange-500/10 text-orange-500 dark:text-orange-400'
+                  : 'border-gray-300 dark:border-neutral-800 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-neutral-200'
               }`}
               title="Reader typography & theme settings"
             >
@@ -246,22 +259,26 @@ export function ArticleReader({
             </button>
 
             {showAppearanceMenu && (
-              <div className="absolute right-0 top-10 z-20 w-64 p-4 rounded-xl border border-neutral-800 bg-neutral-900 text-neutral-100 shadow-2xl space-y-4">
+              <div
+                id="reader-appearance-menu"
+                className="absolute right-0 top-10 z-20 w-64 p-4 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100 shadow-2xl space-y-4"
+              >
                 {/* Theme Selector */}
                 <div className="space-y-1.5">
-                  <div className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+                  <div className="text-[11px] font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wider">
                     Theme
                   </div>
-                  <div className="grid grid-cols-4 gap-1.5">
+                  <div id="reader-theme-options" className="grid grid-cols-4 gap-1.5">
                     {(
                       [
-                        { id: 'dark', label: 'Dark', swatch: 'bg-neutral-900 border-neutral-700' },
-                        { id: 'oled', label: 'OLED', swatch: 'bg-black border-neutral-800' },
+                        { id: 'dark', label: 'Dark', swatch: 'bg-[#121212] border-neutral-700 text-neutral-100' },
+                        { id: 'oled', label: 'OLED', swatch: 'bg-black border-gray-700 text-white' },
                         { id: 'sepia', label: 'Sepia', swatch: 'bg-[#f4ecd8] border-[#d3c0a3] text-stone-900' },
-                        { id: 'light', label: 'Paper', swatch: 'bg-stone-100 border-stone-300 text-stone-900' },
+                        { id: 'light', label: 'Paper', swatch: 'bg-white border-gray-300 text-gray-900' },
                       ] as const
                     ).map((t) => (
                       <button
+                        id={`reader-theme-${t.id}`}
                         key={t.id}
                         type="button"
                         onClick={() =>
@@ -283,10 +300,10 @@ export function ArticleReader({
 
                 {/* Font Family */}
                 <div className="space-y-1.5">
-                  <div className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+                  <div className="text-[11px] font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wider">
                     Typeface
                   </div>
-                  <div className="grid grid-cols-3 gap-1.5">
+                  <div id="reader-font-options" className="grid grid-cols-3 gap-1.5">
                     {(
                       [
                         { id: 'sans', label: 'Sans' },
@@ -295,6 +312,7 @@ export function ArticleReader({
                       ] as const
                     ).map((f) => (
                       <button
+                        id={`reader-font-${f.id}`}
                         key={f.id}
                         type="button"
                         onClick={() =>
@@ -302,8 +320,8 @@ export function ArticleReader({
                         }
                         className={`py-1 rounded-md border text-xs transition-colors ${
                           preferences.fontFamily === f.id
-                            ? 'border-orange-500 bg-orange-500/15 text-orange-400 font-medium'
-                            : 'border-neutral-800 bg-neutral-950 text-neutral-400 hover:text-neutral-200'
+                            ? 'border-orange-500 bg-orange-500/15 text-orange-600 dark:text-orange-400 font-medium'
+                            : 'border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-[#121212] text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-neutral-200'
                         }`}
                       >
                         {f.label}
@@ -314,10 +332,10 @@ export function ArticleReader({
 
                 {/* Font Size */}
                 <div className="space-y-1.5">
-                  <div className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+                  <div className="text-[11px] font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wider">
                     Text Size
                   </div>
-                  <div className="grid grid-cols-4 gap-1.5">
+                  <div id="reader-size-options" className="grid grid-cols-4 gap-1.5">
                     {(
                       [
                         { id: 'sm', label: 'S' },
@@ -327,6 +345,7 @@ export function ArticleReader({
                       ] as const
                     ).map((sz) => (
                       <button
+                        id={`reader-size-${sz.id}`}
                         key={sz.id}
                         type="button"
                         onClick={() =>
@@ -334,8 +353,8 @@ export function ArticleReader({
                         }
                         className={`py-1 rounded-md border text-xs transition-colors ${
                           preferences.fontSize === sz.id
-                            ? 'border-orange-500 bg-orange-500/15 text-orange-400 font-medium'
-                            : 'border-neutral-800 bg-neutral-950 text-neutral-400 hover:text-neutral-200'
+                            ? 'border-orange-500 bg-orange-500/15 text-orange-600 dark:text-orange-400 font-medium'
+                            : 'border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-[#121212] text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-neutral-200'
                         }`}
                       >
                         {sz.label}
@@ -346,10 +365,10 @@ export function ArticleReader({
 
                 {/* Column Width */}
                 <div className="space-y-1.5">
-                  <div className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+                  <div className="text-[11px] font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wider">
                     Line Width
                   </div>
-                  <div className="grid grid-cols-3 gap-1.5">
+                  <div id="reader-width-options" className="grid grid-cols-3 gap-1.5">
                     {(
                       [
                         { id: 'narrow', label: 'Focus' },
@@ -358,6 +377,7 @@ export function ArticleReader({
                       ] as const
                     ).map((w) => (
                       <button
+                        id={`reader-width-${w.id}`}
                         key={w.id}
                         type="button"
                         onClick={() =>
@@ -365,8 +385,8 @@ export function ArticleReader({
                         }
                         className={`py-1 rounded-md border text-xs transition-colors ${
                           preferences.maxWidth === w.id
-                            ? 'border-orange-500 bg-orange-500/15 text-orange-400 font-medium'
-                            : 'border-neutral-800 bg-neutral-950 text-neutral-400 hover:text-neutral-200'
+                            ? 'border-orange-500 bg-orange-500/15 text-orange-600 dark:text-orange-400 font-medium'
+                            : 'border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-[#121212] text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-neutral-200'
                         }`}
                       >
                         {w.label}
@@ -378,12 +398,13 @@ export function ArticleReader({
             )}
 
             <button
+              id="reader-mark-read-btn"
               type="button"
               onClick={() => onToggleRead(article.id)}
               className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border transition-colors ${
                 article.isRead
-                  ? 'border-neutral-800 text-neutral-400 hover:text-neutral-200'
-                  : 'border-orange-500/30 text-orange-400 hover:bg-orange-950/20'
+                  ? 'border-gray-300 dark:border-neutral-800 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-neutral-200'
+                  : 'border-orange-500/30 text-orange-600 dark:text-orange-400 hover:bg-orange-500/10'
               }`}
             >
               <CheckCircle className="w-3.5 h-3.5" />
@@ -391,10 +412,11 @@ export function ArticleReader({
             </button>
 
             <button
+              id="reader-star-btn"
               type="button"
               onClick={() => onToggleStar(article.id)}
-              className={`p-1.5 rounded-md hover:bg-neutral-800/60 transition-colors ${
-                article.isStarred ? 'text-amber-400' : 'text-neutral-400'
+              className={`p-1.5 rounded-md hover:bg-gray-200/60 dark:hover:bg-neutral-800/60 transition-colors ${
+                article.isStarred ? 'text-amber-500 dark:text-amber-400' : 'text-gray-500 dark:text-neutral-400'
               }`}
               title={article.isStarred ? 'Unstar (s)' : 'Star (s)'}
             >
@@ -410,11 +432,12 @@ export function ArticleReader({
 
       {/* Reader Body */}
       <article
+        id="reader-article"
         className={`${MAX_WIDTH_CLASSES[preferences.maxWidth]} ${FONT_FAMILY_CLASSES[preferences.fontFamily]} w-full mx-auto px-8 py-10`}
       >
-        <header className="mb-8 space-y-3">
+        <header id="reader-article-header" className="mb-8 space-y-3">
           {source && (
-            <div className="flex items-center gap-2 text-xs font-medium text-orange-400">
+            <div id="reader-source-meta" className="flex items-center gap-2 text-xs font-medium text-orange-600 dark:text-orange-400">
               {source.favicon && (
                 <img
                   src={source.favicon}
@@ -425,7 +448,7 @@ export function ArticleReader({
               )}
               <span>{source.title}</span>
               {source.category && (
-                <span className="px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-[10px] text-orange-300">
+                <span className="px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-[10px] text-orange-600 dark:text-orange-300">
                   {source.category}
                 </span>
               )}
@@ -433,12 +456,13 @@ export function ArticleReader({
           )}
 
           <h1
+            id="reader-article-title"
             className={`text-2xl sm:text-3xl font-bold tracking-tight leading-tight ${themeStyle.heading}`}
           >
             {article.title}
           </h1>
 
-          <div className={`flex flex-wrap items-center gap-3 text-xs ${themeStyle.muted}`}>
+          <div id="reader-article-meta" className={`flex flex-wrap items-center gap-3 text-xs ${themeStyle.muted}`}>
             {article.author && <span>By {article.author}</span>}
             {article.pubDate && (
               <span>
@@ -459,42 +483,49 @@ export function ArticleReader({
 
           {/* Personal Note Editor */}
           {noteOpen && (
-            <div className="mt-4 p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 space-y-2">
-              <div className="flex items-center justify-between text-xs font-medium text-emerald-400">
+            <div
+              id="reader-note-editor"
+              className="mt-4 p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-50/70 dark:bg-emerald-950/20 space-y-2"
+            >
+              <div className="flex items-center justify-between text-xs font-medium text-emerald-700 dark:text-emerald-400">
                 <span className="flex items-center gap-1.5">
                   <StickyNote className="w-3.5 h-3.5" />
                   Personal Reading Note
                 </span>
                 {article.note && (
                   <button
+                    id="reader-note-delete-btn"
                     type="button"
                     onClick={() => {
                       setNoteDraft('');
                       onUpdateNote(article.id, '');
                       setNoteOpen(false);
                     }}
-                    className="text-[11px] text-neutral-400 hover:text-red-400"
+                    className="text-[11px] text-gray-500 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-400"
                   >
                     Delete note
                   </button>
                 )}
               </div>
               <textarea
+                id="reader-note-textarea"
                 rows={2}
                 value={noteDraft}
                 onChange={(e) => setNoteDraft(e.target.value)}
                 placeholder="Write a personal takeaway, highlight, or reminder for this article..."
-                className="w-full rounded-lg bg-neutral-950/80 border border-neutral-800 p-2.5 text-xs text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:border-emerald-500"
+                className="w-full rounded-lg bg-white dark:bg-neutral-900/80 border border-gray-300 dark:border-neutral-800 p-2.5 text-xs text-gray-900 dark:text-neutral-100 placeholder:text-gray-400 dark:placeholder:text-neutral-500 focus:outline-none focus:border-emerald-500"
               />
               <div className="flex justify-end gap-2">
                 <button
+                  id="reader-note-close-btn"
                   type="button"
                   onClick={() => setNoteOpen(false)}
-                  className="px-2.5 py-1 text-xs text-neutral-400 hover:text-neutral-200"
+                  className="px-2.5 py-1 text-xs text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200"
                 >
                   Close
                 </button>
                 <button
+                  id="reader-note-save-btn"
                   type="button"
                   onClick={handleSaveNote}
                   className="px-3 py-1 rounded-md bg-emerald-600 hover:bg-emerald-500 text-xs font-medium text-white"
@@ -508,8 +539,9 @@ export function ArticleReader({
 
         {/* Sanitized Content Render Container */}
         <div
+          id="reader-article-content"
           ref={contentContainerRef}
-          className={`prose max-w-none ${themeStyle.prose} ${themeStyle.text} ${FONT_SIZE_CLASSES[preferences.fontSize]} space-y-4 [&_a]:underline [&_img]:rounded-lg [&_img]:max-w-full [&_pre]:bg-neutral-900 [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:overflow-x-auto [&_blockquote]:border-l-2 [&_blockquote]:border-orange-500/60 [&_blockquote]:pl-4 [&_blockquote]:italic`}
+          className={`prose max-w-none ${themeStyle.prose} ${themeStyle.text} ${FONT_SIZE_CLASSES[preferences.fontSize]} space-y-4 [&_a]:underline [&_img]:rounded-lg [&_img]:max-w-full [&_pre]:bg-gray-100 dark:[&_pre]:bg-gray-900 [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:overflow-x-auto [&_blockquote]:border-l-2 [&_blockquote]:border-orange-500/60 [&_blockquote]:pl-4 [&_blockquote]:italic`}
         />
       </article>
     </main>

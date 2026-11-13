@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { useFeeds } from './hooks/useFeeds';
+import { useColorScheme } from './hooks/useColorScheme';
 import { Sidebar } from './components/Sidebar';
 import { ArticleList, type SortOrder } from './components/ArticleList';
 import { ArticleReader } from './components/ArticleReader';
@@ -33,6 +34,7 @@ export default function App() {
     deleteSource,
   } = useFeeds();
 
+  const { resolvedTheme, toggleTheme } = useColorScheme();
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -299,21 +301,31 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-neutral-950 text-neutral-400 text-sm">
+      <div
+        id="app-loading"
+        className="h-screen flex items-center justify-center bg-white dark:bg-[#121212] text-gray-500 dark:text-neutral-400 text-sm"
+      >
         Loading subscriptions...
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-neutral-950 text-neutral-100">
+    <div
+      id="app-shell"
+      className="flex h-screen w-screen overflow-hidden bg-white dark:bg-[#121212] text-gray-900 dark:text-neutral-100"
+    >
       {error && (
-        <div className="fixed bottom-4 right-4 z-50 bg-red-950/95 border border-red-700 text-red-200 text-xs px-3.5 py-2.5 rounded-lg shadow-xl flex items-center gap-2.5">
+        <div
+          id="app-error-toast"
+          className="fixed bottom-4 right-4 z-50 bg-red-50 dark:bg-red-950/95 border border-red-300 dark:border-red-700 text-red-800 dark:text-red-200 text-xs px-3.5 py-2.5 rounded-lg shadow-xl flex items-center gap-2.5"
+        >
           <span>{error}</span>
           <button
+            id="app-error-dismiss-btn"
             type="button"
             onClick={clearError}
-            className="text-red-400 hover:text-red-200"
+            className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200"
             aria-label="Dismiss error"
           >
             <X className="w-3.5 h-3.5" />
@@ -331,6 +343,8 @@ export default function App() {
         onUpdateSourceCategory={updateSourceCategory}
         onRefreshAll={refreshAllFeeds}
         isRefreshing={isRefreshing}
+        theme={resolvedTheme}
+        onToggleTheme={toggleTheme}
         unreadCount={unreadCount}
         starredCount={starredCount}
         notesCount={notesCount}

@@ -1,5 +1,7 @@
 # ModernRSS
 
+**Version 1.0.1**
+
 A fast, keyboard-first RSS & Atom feed reader built with React 19, TypeScript, Tailwind CSS v4, and IndexedDB.
 
 **Live Demo:** [https://derekbytheway.github.io/modern-rss/](https://derekbytheway.github.io/modern-rss/)

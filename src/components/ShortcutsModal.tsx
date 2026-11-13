@@ -69,40 +69,48 @@ export function ShortcutsModal({ isOpen, onClose }: ShortcutsModalProps) {
 
   return (
     <dialog
+      id="shortcuts-modal"
       ref={dialogRef}
       aria-labelledby={titleId}
       {...({ closedby: 'any' } as Record<string, string>)}
-      className="m-auto w-full max-w-md rounded-xl border border-neutral-800 bg-neutral-900 text-neutral-100 shadow-2xl backdrop:bg-black/70 backdrop:backdrop-blur-xs p-0 overflow-hidden"
+      className="m-auto w-full max-w-md rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#121212] text-gray-900 dark:text-neutral-100 shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-xs p-0 overflow-hidden"
     >
-      <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-800 bg-neutral-950/60">
+      <div
+        id="shortcuts-modal-header"
+        className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900/50"
+      >
         <div className="flex items-center gap-2">
-          <Keyboard className="w-4 h-4 text-orange-400" />
-          <h2 id={titleId} className="text-sm font-semibold text-neutral-100">
+          <Keyboard className="w-4 h-4 text-orange-500 dark:text-orange-400" />
+          <h2 id={titleId} className="text-sm font-semibold text-gray-900 dark:text-neutral-100">
             Keyboard Shortcuts
           </h2>
         </div>
         <button
+          id="shortcuts-modal-close-btn"
           type="button"
           onClick={onClose}
-          className="p-1 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors"
+          className="p-1 rounded-lg text-gray-500 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-neutral-100 hover:bg-gray-200 dark:hover:bg-neutral-800 transition-colors"
           aria-label="Close shortcuts guide"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
-      <div className="p-5 divide-y divide-neutral-800/70">
+      <div
+        id="shortcuts-modal-list"
+        className="p-5 divide-y divide-gray-200 dark:divide-neutral-800/70"
+      >
         {SHORTCUTS.map((item) => (
           <div
             key={item.label}
             className="py-2.5 first:pt-0 last:pb-0 flex items-center justify-between text-xs"
           >
-            <span className="text-neutral-300">{item.label}</span>
+            <span className="text-gray-700 dark:text-neutral-300">{item.label}</span>
             <div className="flex items-center gap-1">
               {item.keys.map((k) => (
                 <kbd
                   key={k}
-                  className="px-2 py-0.5 rounded bg-neutral-950 border border-neutral-700 font-mono text-[11px] text-orange-400 shadow-xs"
+                  className="px-2 py-0.5 rounded bg-gray-100 dark:bg-neutral-900 border border-gray-300 dark:border-neutral-700 font-mono text-[11px] text-orange-600 dark:text-orange-400 shadow-xs"
                 >
                   {k}
                 </kbd>

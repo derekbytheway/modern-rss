@@ -227,30 +227,35 @@ export function DataPortabilityModal({
 
   return (
     <dialog
+      id="portability-modal"
       ref={dialogRef}
       aria-labelledby={titleId}
       {...({ closedby: 'any' } as Record<string, string>)}
-      className="m-auto w-full max-w-2xl rounded-xl border border-neutral-800 bg-neutral-900 text-neutral-100 shadow-2xl backdrop:bg-black/70 backdrop:backdrop-blur-xs p-0 overflow-hidden"
+      className="m-auto w-full max-w-2xl rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#121212] text-gray-900 dark:text-neutral-100 shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-xs p-0 overflow-hidden"
     >
       {/* Modal Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-950/60">
+      <div
+        id="portability-modal-header"
+        className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900/50"
+      >
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400">
+          <div className="p-2 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-500 dark:text-orange-400">
             <FileCode2 className="w-5 h-5" />
           </div>
           <div>
-            <h2 id={titleId} className="text-base font-semibold text-neutral-100">
+            <h2 id={titleId} className="text-base font-semibold text-gray-900 dark:text-neutral-100">
               OPML &amp; Feed Portability Center
             </h2>
-            <p className="text-xs text-neutral-400">
+            <p className="text-xs text-gray-500 dark:text-neutral-400">
               Import or export OPML 2.0 subscriptions, explore starter packs, or snapshot your reader state
             </p>
           </div>
         </div>
         <button
+          id="portability-modal-close-btn"
           type="button"
           onClick={onClose}
-          className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors"
+          className="p-1.5 rounded-lg text-gray-500 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-neutral-100 hover:bg-gray-200 dark:hover:bg-neutral-800 transition-colors"
           aria-label="Close modal"
         >
           <X className="w-4 h-4" />
@@ -258,8 +263,12 @@ export function DataPortabilityModal({
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-neutral-800 bg-neutral-950/30 px-6 gap-2 pt-2">
+      <div
+        id="portability-modal-tabs"
+        className="flex border-b border-gray-200 dark:border-neutral-800 bg-gray-50/50 dark:bg-neutral-900/30 px-6 gap-2 pt-2"
+      >
         <button
+          id="portability-tab-opml"
           type="button"
           onClick={() => {
             onTabChange('opml');
@@ -267,14 +276,15 @@ export function DataPortabilityModal({
           }}
           className={`flex items-center gap-2 px-3.5 py-2 text-xs font-medium border-b-2 transition-colors ${
             activeTab === 'opml'
-              ? 'border-orange-500 text-orange-400'
-              : 'border-transparent text-neutral-400 hover:text-neutral-200'
+              ? 'border-orange-500 text-orange-600 dark:text-orange-400'
+              : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200'
           }`}
         >
           <FileCode2 className="w-3.5 h-3.5" />
           OPML Import / Export
         </button>
         <button
+          id="portability-tab-starter"
           type="button"
           onClick={() => {
             onTabChange('starter');
@@ -282,14 +292,15 @@ export function DataPortabilityModal({
           }}
           className={`flex items-center gap-2 px-3.5 py-2 text-xs font-medium border-b-2 transition-colors ${
             activeTab === 'starter'
-              ? 'border-orange-500 text-orange-400'
-              : 'border-transparent text-neutral-400 hover:text-neutral-200'
+              ? 'border-orange-500 text-orange-600 dark:text-orange-400'
+              : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200'
           }`}
         >
           <Sparkles className="w-3.5 h-3.5" />
           Curated Starter Pack
         </button>
         <button
+          id="portability-tab-backup"
           type="button"
           onClick={() => {
             onTabChange('backup');
@@ -297,8 +308,8 @@ export function DataPortabilityModal({
           }}
           className={`flex items-center gap-2 px-3.5 py-2 text-xs font-medium border-b-2 transition-colors ${
             activeTab === 'backup'
-              ? 'border-orange-500 text-orange-400'
-              : 'border-transparent text-neutral-400 hover:text-neutral-200'
+              ? 'border-orange-500 text-orange-600 dark:text-orange-400'
+              : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200'
           }`}
         >
           <Database className="w-3.5 h-3.5" />
@@ -307,33 +318,39 @@ export function DataPortabilityModal({
       </div>
 
       {/* Modal Body */}
-      <div className="p-6 max-h-[72vh] overflow-y-auto space-y-6">
+      <div id="portability-modal-body" className="p-6 max-h-[72vh] overflow-y-auto space-y-6">
         {parseError && (
-          <div className="flex items-center gap-2.5 p-3 rounded-lg bg-red-950/60 border border-red-800/80 text-red-200 text-xs">
-            <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+          <div
+            id="portability-parse-error"
+            className="flex items-center gap-2.5 p-3 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-800/80 text-red-700 dark:text-red-200 text-xs"
+          >
+            <AlertCircle className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0" />
             <span>{parseError}</span>
           </div>
         )}
 
         {/* TAB 1: OPML IMPORT / EXPORT */}
         {activeTab === 'opml' && (
-          <div className="space-y-6">
+          <div id="portability-opml-panel" className="space-y-6">
             {/* Export OPML Section */}
-            <div className="p-4 rounded-xl border border-neutral-800 bg-neutral-950/50 space-y-3">
+            <div
+              id="portability-opml-export"
+              className="p-4 rounded-xl border border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900/40 space-y-3"
+            >
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div>
-                  <h3 className="text-sm font-medium text-neutral-100 flex items-center gap-2">
-                    <Download className="w-4 h-4 text-orange-400" />
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-neutral-100 flex items-center gap-2">
+                    <Download className="w-4 h-4 text-orange-500 dark:text-orange-400" />
                     Export Subscriptions to OPML 2.0
                   </h3>
-                  <p className="text-xs text-neutral-400 mt-0.5">
+                  <p className="text-xs text-gray-500 dark:text-neutral-400 mt-0.5">
                     Currently storing{' '}
-                    <span className="text-neutral-200 font-medium">{sources.length} feeds</span>
+                    <span className="text-gray-800 dark:text-neutral-200 font-medium">{sources.length} feeds</span>
                     {categoryCount > 0 && (
                       <>
                         {' '}
                         organized across{' '}
-                        <span className="text-neutral-200 font-medium">
+                        <span className="text-gray-800 dark:text-neutral-200 font-medium">
                           {categoryCount} folders
                         </span>
                       </>
@@ -344,14 +361,15 @@ export function DataPortabilityModal({
 
                 <div className="flex items-center gap-2">
                   <button
+                    id="portability-copy-xml-btn"
                     type="button"
                     disabled={sources.length === 0}
                     onClick={handleCopyOpml}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-700 hover:border-neutral-600 bg-neutral-900 text-xs font-medium text-neutral-200 disabled:opacity-40 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-neutral-700 hover:border-gray-400 dark:hover:border-neutral-600 bg-white dark:bg-[#121212] text-xs font-medium text-gray-700 dark:text-neutral-200 disabled:opacity-40 transition-colors"
                   >
                     {copiedXml ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <Check className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
                         Copied XML
                       </>
                     ) : (
@@ -363,6 +381,7 @@ export function DataPortabilityModal({
                   </button>
 
                   <button
+                    id="portability-export-opml-btn"
                     type="button"
                     disabled={sources.length === 0}
                     onClick={() => downloadOpmlFile(sources)}
@@ -377,14 +396,18 @@ export function DataPortabilityModal({
               {sources.length > 0 && (
                 <div>
                   <button
+                    id="portability-xml-preview-btn"
                     type="button"
                     onClick={() => setShowXmlPreview((v) => !v)}
-                    className="text-xs text-orange-400 hover:text-orange-300 underline underline-offset-2"
+                    className="text-xs text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 underline underline-offset-2"
                   >
                     {showXmlPreview ? 'Hide OPML XML Preview' : 'Preview generated OPML 2.0 XML'}
                   </button>
                   {showXmlPreview && (
-                    <pre className="mt-2 p-3 rounded-lg bg-neutral-950 border border-neutral-800 text-[11px] font-mono text-neutral-300 overflow-x-auto max-h-44">
+                    <pre
+                      id="portability-xml-preview"
+                      className="mt-2 p-3 rounded-lg bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 text-[11px] font-mono text-gray-700 dark:text-neutral-300 overflow-x-auto max-h-44"
+                    >
                       {exportToOpml(sources)}
                     </pre>
                   )}
@@ -393,20 +416,21 @@ export function DataPortabilityModal({
             </div>
 
             {/* Import OPML Section */}
-            <div className="space-y-3">
+            <div id="portability-opml-import" className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-neutral-100 flex items-center gap-2">
-                  <Upload className="w-4 h-4 text-orange-400" />
+                <h3 className="text-sm font-medium text-gray-900 dark:text-neutral-100 flex items-center gap-2">
+                  <Upload className="w-4 h-4 text-orange-500 dark:text-orange-400" />
                   Import Subscriptions from OPML File
                 </h3>
                 {parsedOutlines && (
                   <button
+                    id="portability-opml-reset-btn"
                     type="button"
                     onClick={() => {
                       setParsedOutlines(null);
                       setImportProgress(null);
                     }}
-                    className="text-xs text-neutral-400 hover:text-neutral-200"
+                    className="text-xs text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200"
                   >
                     Choose another file
                   </button>
@@ -415,6 +439,7 @@ export function DataPortabilityModal({
 
               {!parsedOutlines ? (
                 <div
+                  id="portability-opml-dropzone"
                   onDragOver={(e) => {
                     e.preventDefault();
                     setIsDragging(true);
@@ -425,10 +450,11 @@ export function DataPortabilityModal({
                   className={`cursor-pointer border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
                     isDragging
                       ? 'border-orange-500 bg-orange-500/10'
-                      : 'border-neutral-800 hover:border-neutral-700 bg-neutral-950/40'
+                      : 'border-gray-300 dark:border-neutral-800 hover:border-gray-400 dark:hover:border-neutral-700 bg-gray-50 dark:bg-neutral-900/30'
                   }`}
                 >
                   <input
+                    id="portability-opml-file-input"
                     ref={fileInputRef}
                     type="file"
                     accept=".opml,.xml,text/xml,application/xml"
@@ -439,62 +465,70 @@ export function DataPortabilityModal({
                       e.target.value = '';
                     }}
                   />
-                  <Upload className="w-8 h-8 text-neutral-500 mx-auto mb-2.5" />
-                  <p className="text-sm font-medium text-neutral-200">
-                    Drop your <code className="text-orange-400">.opml</code> or{' '}
-                    <code className="text-orange-400">.xml</code> file here, or click to browse
+                  <Upload className="w-8 h-8 text-gray-400 dark:text-neutral-500 mx-auto mb-2.5" />
+                  <p className="text-sm font-medium text-gray-800 dark:text-neutral-200">
+                    Drop your <code className="text-orange-600 dark:text-orange-400">.opml</code> or{' '}
+                    <code className="text-orange-600 dark:text-orange-400">.xml</code> file here, or click to browse
                   </p>
-                  <p className="text-xs text-neutral-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-neutral-400 mt-1">
                     Automatically preserves OPML folder hierarchies as feed categories
                   </p>
                 </div>
               ) : (
-                <div className="rounded-xl border border-neutral-800 bg-neutral-950/60 overflow-hidden">
-                  <div className="px-4 py-3 border-b border-neutral-800 flex items-center justify-between bg-neutral-900/50">
-                    <span className="text-xs font-medium text-neutral-300">
+                <div
+                  id="portability-opml-preview"
+                  className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900/40 overflow-hidden"
+                >
+                  <div className="px-4 py-3 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-100/80 dark:bg-neutral-900/60">
+                    <span className="text-xs font-medium text-gray-700 dark:text-neutral-300">
                       Found {parsedOutlines.length} feeds in OPML ({selectedUrls.size} selected)
                     </span>
                     <div className="flex items-center gap-3 text-xs">
                       <button
+                        id="portability-opml-select-all-btn"
                         type="button"
                         onClick={() =>
                           setSelectedUrls(new Set(parsedOutlines.map((o) => o.xmlUrl)))
                         }
-                        className="text-neutral-400 hover:text-neutral-200"
+                        className="text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200"
                       >
                         Select All
                       </button>
                       <button
+                        id="portability-opml-clear-btn"
                         type="button"
                         onClick={() => setSelectedUrls(new Set())}
-                        className="text-neutral-400 hover:text-neutral-200"
+                        className="text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200"
                       >
                         Clear
                       </button>
                     </div>
                   </div>
 
-                  <div className="max-h-52 overflow-y-auto divide-y divide-neutral-900">
+                  <div
+                    id="portability-opml-list"
+                    className="max-h-52 overflow-y-auto divide-y divide-gray-200 dark:divide-neutral-800/70"
+                  >
                     {parsedOutlines.map((item) => {
                       const alreadyInFeeds = existingUrls.has(item.xmlUrl.toLowerCase());
                       const checked = selectedUrls.has(item.xmlUrl);
                       return (
                         <label
                           key={item.xmlUrl}
-                          className="flex items-center justify-between px-4 py-2.5 hover:bg-neutral-900/40 cursor-pointer text-xs"
+                          className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-neutral-800/40 cursor-pointer text-xs"
                         >
                           <div className="flex items-center gap-3 min-w-0 pr-3">
                             <input
                               type="checkbox"
                               checked={checked}
                               onChange={() => toggleOutlineSelection(item.xmlUrl)}
-                              className="rounded border-neutral-700 bg-neutral-900 text-orange-500 focus:ring-orange-500"
+                              className="rounded border-gray-300 dark:border-neutral-700 bg-white dark:bg-[#121212] text-orange-500 focus:ring-orange-500"
                             />
                             <div className="min-w-0">
-                              <div className="font-medium text-neutral-200 truncate">
+                              <div className="font-medium text-gray-800 dark:text-neutral-200 truncate">
                                 {item.title}
                               </div>
-                              <div className="text-neutral-500 truncate text-[11px]">
+                              <div className="text-gray-500 dark:text-neutral-400 truncate text-[11px]">
                                 {item.xmlUrl}
                               </div>
                             </div>
@@ -502,13 +536,13 @@ export function DataPortabilityModal({
 
                           <div className="flex items-center gap-2 shrink-0">
                             {item.category && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-300 text-[11px]">
-                                <Folder className="w-3 h-3 text-orange-400" />
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-200 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300 text-[11px]">
+                                <Folder className="w-3 h-3 text-orange-500 dark:text-orange-400" />
                                 {item.category}
                               </span>
                             )}
                             {alreadyInFeeds && (
-                              <span className="px-2 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 text-[10px]">
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300 text-[10px]">
                                 Subscribed
                               </span>
                             )}
@@ -519,16 +553,16 @@ export function DataPortabilityModal({
                   </div>
 
                   {/* Progress & Import Action Footer */}
-                  <div className="p-4 border-t border-neutral-800 bg-neutral-900/40 flex items-center justify-between gap-4">
+                  <div className="p-4 border-t border-gray-200 dark:border-neutral-800 bg-gray-100/60 dark:bg-neutral-900/40 flex items-center justify-between gap-4">
                     <div className="flex-1">
                       {importProgress ? (
                         <div className="space-y-1.5">
                           <div className="flex items-center justify-between text-xs">
-                            <span className="text-neutral-300 flex items-center gap-1.5">
+                            <span className="text-gray-700 dark:text-neutral-300 flex items-center gap-1.5">
                               {isImporting ? (
-                                <Loader2 className="w-3.5 h-3.5 animate-spin text-orange-400" />
+                                <Loader2 className="w-3.5 h-3.5 animate-spin text-orange-500 dark:text-orange-400" />
                               ) : (
-                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
                               )}
                               {isImporting
                                 ? `Fetching ${importProgress.currentTitle || 'feeds'}... (${importProgress.completed}/${importProgress.total})`
@@ -539,7 +573,7 @@ export function DataPortabilityModal({
                                   }`}
                             </span>
                           </div>
-                          <div className="w-full h-1.5 rounded-full bg-neutral-800 overflow-hidden">
+                          <div className="w-full h-1.5 rounded-full bg-gray-200 dark:bg-neutral-800 overflow-hidden">
                             <div
                               className="h-full bg-orange-500 transition-all duration-200"
                               style={{
@@ -553,7 +587,7 @@ export function DataPortabilityModal({
                           </div>
                         </div>
                       ) : (
-                        <span className="text-xs text-neutral-400">
+                        <span className="text-xs text-gray-500 dark:text-neutral-400">
                           Ready to fetch and import {selectedUrls.size} selected feed
                           {selectedUrls.size === 1 ? '' : 's'}.
                         </span>
@@ -561,6 +595,7 @@ export function DataPortabilityModal({
                     </div>
 
                     <button
+                      id="portability-opml-import-btn"
                       type="button"
                       disabled={isImporting || selectedUrls.size === 0}
                       onClick={handleConfirmImport}
@@ -578,17 +613,18 @@ export function DataPortabilityModal({
 
         {/* TAB 2: CURATED STARTER PACK */}
         {activeTab === 'starter' && (
-          <div className="space-y-4">
+          <div id="portability-starter-panel" className="space-y-4">
             <div className="flex items-center justify-between gap-4 p-4 rounded-xl border border-orange-500/20 bg-orange-500/5">
               <div>
-                <h3 className="text-sm font-medium text-neutral-100">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-neutral-100">
                   Instant Curated OPML Bundle
                 </h3>
-                <p className="text-xs text-neutral-400 mt-0.5">
+                <p className="text-xs text-gray-500 dark:text-neutral-400 mt-0.5">
                   Populate ModernRSS with 8 high-signal feeds across Tech, Web Development, and Science.
                 </p>
               </div>
               <button
+                id="portability-starter-import-all-btn"
                 type="button"
                 disabled={isImporting}
                 onClick={() => handleImportStarterPack(CURATED_STARTER_FEEDS)}
@@ -604,13 +640,16 @@ export function DataPortabilityModal({
             </div>
 
             {importProgress && (
-              <div className="p-3 rounded-lg border border-neutral-800 bg-neutral-950 text-xs text-neutral-300 flex items-center justify-between">
+              <div
+                id="portability-starter-progress"
+                className="p-3 rounded-lg border border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900 text-xs text-gray-700 dark:text-neutral-300 flex items-center justify-between"
+              >
                 <span>
                   {isImporting
                     ? `Importing starter pack (${importProgress.completed}/${importProgress.total})...`
                     : `Added ${importProgress.succeeded} feeds (${importProgress.skipped} already subscribed).`}
                 </span>
-                <span className="font-mono text-orange-400">
+                <span className="font-mono text-orange-600 dark:text-orange-400">
                   {Math.round(
                     (importProgress.completed / Math.max(1, importProgress.total)) * 100
                   )}
@@ -619,7 +658,7 @@ export function DataPortabilityModal({
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div id="portability-starter-grid" className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {CURATED_STARTER_FEEDS.map((item) => {
                 const isSubscribed = existingUrls.has(item.xmlUrl.toLowerCase());
                 const isLoadingThis = loadingStarterUrl === item.xmlUrl;
@@ -627,16 +666,16 @@ export function DataPortabilityModal({
                 return (
                   <div
                     key={item.xmlUrl}
-                    className="p-3 rounded-xl border border-neutral-800 bg-neutral-950/60 flex items-center justify-between gap-3"
+                    className="p-3 rounded-xl border border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900/40 flex items-center justify-between gap-3"
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-medium text-neutral-100 truncate">
+                        <span className="text-xs font-medium text-gray-900 dark:text-neutral-100 truncate">
                           {item.title}
                         </span>
                       </div>
-                      <span className="inline-flex items-center gap-1 text-[11px] text-neutral-400 mt-0.5">
-                        <Folder className="w-3 h-3 text-orange-400" />
+                      <span className="inline-flex items-center gap-1 text-[11px] text-gray-500 dark:text-neutral-400 mt-0.5">
+                        <Folder className="w-3 h-3 text-orange-500 dark:text-orange-400" />
                         {item.category}
                       </span>
                     </div>
@@ -647,8 +686,8 @@ export function DataPortabilityModal({
                       onClick={() => handleSingleStarter(item)}
                       className={`px-2.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1 shrink-0 transition-colors ${
                         isSubscribed
-                          ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/50'
-                          : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-200'
+                          ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800/50'
+                          : 'bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 text-gray-800 dark:text-neutral-200'
                       }`}
                     >
                       {isSubscribed ? (
@@ -674,21 +713,25 @@ export function DataPortabilityModal({
 
         {/* TAB 3: FULL JSON SNAPSHOT */}
         {activeTab === 'backup' && (
-          <div className="space-y-4">
-            <div className="p-4 rounded-xl border border-neutral-800 bg-neutral-950/50 space-y-3">
+          <div id="portability-backup-panel" className="space-y-4">
+            <div
+              id="portability-backup-export"
+              className="p-4 rounded-xl border border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900/40 space-y-3"
+            >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="text-sm font-medium text-neutral-100">
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-neutral-100">
                     Export Full Reader Database (.json)
                   </h3>
-                  <p className="text-xs text-neutral-400 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-neutral-400 mt-1">
                     Unlike standard OPML (which only backs up feed URLs and folders), a Full JSON Snapshot preserves all{' '}
-                    <span className="text-neutral-200">{articles.length} cached articles</span>,{' '}
-                    <span className="text-amber-400">{starredCount} starred items</span>, and{' '}
-                    <span className="text-orange-400">{notesCount} personal notes</span>.
+                    <span className="text-gray-800 dark:text-neutral-200">{articles.length} cached articles</span>,{' '}
+                    <span className="text-amber-600 dark:text-amber-400">{starredCount} starred items</span>, and{' '}
+                    <span className="text-orange-600 dark:text-orange-400">{notesCount} personal notes</span>.
                   </p>
                 </div>
                 <button
+                  id="portability-download-json-btn"
                   type="button"
                   disabled={sources.length === 0 && articles.length === 0}
                   onClick={() => downloadFullBackupJson(sources, articles)}
@@ -700,17 +743,21 @@ export function DataPortabilityModal({
               </div>
             </div>
 
-            <div className="p-4 rounded-xl border border-neutral-800 bg-neutral-950/50 flex items-center justify-between gap-4">
+            <div
+              id="portability-backup-restore"
+              className="p-4 rounded-xl border border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900/40 flex items-center justify-between gap-4"
+            >
               <div>
-                <h3 className="text-sm font-medium text-neutral-100">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-neutral-100">
                   Restore from JSON Snapshot
                 </h3>
-                <p className="text-xs text-neutral-400 mt-0.5">
+                <p className="text-xs text-gray-500 dark:text-neutral-400 mt-0.5">
                   Merges feeds, starred articles, read status, and notes from a previous backup file.
                 </p>
               </div>
               <div>
                 <input
+                  id="portability-restore-json-input"
                   ref={jsonInputRef}
                   type="file"
                   accept=".json,application/json"
@@ -722,9 +769,10 @@ export function DataPortabilityModal({
                   }}
                 />
                 <button
+                  id="portability-restore-json-btn"
                   type="button"
                   onClick={() => jsonInputRef.current?.click()}
-                  className="px-3.5 py-2 rounded-lg border border-neutral-700 hover:bg-neutral-800 text-xs font-medium text-neutral-200 flex items-center gap-1.5 shrink-0 transition-colors"
+                  className="px-3.5 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-800 text-xs font-medium text-gray-700 dark:text-neutral-200 flex items-center gap-1.5 shrink-0 transition-colors"
                 >
                   <Upload className="w-3.5 h-3.5" />
                   Restore JSON File
@@ -733,8 +781,11 @@ export function DataPortabilityModal({
             </div>
 
             {backupMessage && (
-              <div className="flex items-center gap-2 p-3 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-200 text-xs">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <div
+                id="portability-backup-message"
+                className="flex items-center gap-2 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-200 text-xs"
+              >
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400 shrink-0" />
                 <span>{backupMessage}</span>
               </div>
             )}
