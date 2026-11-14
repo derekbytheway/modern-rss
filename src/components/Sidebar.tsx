@@ -16,6 +16,8 @@ import {
   Keyboard,
   StickyNote,
   FolderInput,
+  FolderPlus,
+  Check,
   Sun,
   Moon,
 } from 'lucide-react';
@@ -64,6 +66,18 @@ export function Sidebar({
 }: SidebarProps) {
   const [newUrl, setNewUrl] = useState('');
   const [newCategory, setNewCategory] = useState('');
+  const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
+  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
+  const [customFolders, setCustomFolders] = useState<string[]>(() => {
+    try {
+      const raw = localStorage.getItem('rss_custom_folders');
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === 'string') : [];
+    } catch {
+      return [];
+    }
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [inputOpen, setInputOpen] = useState(false);
   const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(new Set());
@@ -100,6 +114,9 @@ export function Sidebar({
     const sortedCategories = Array.from(groups.keys()).sort((a, b) =>
       a.localeCompare(b)
     );
+    const allKnownCategories = Array.from(
+      new Set([...sortedCategories, ...customFolders])
+    ).sort((a, b) => a.localeCompare(b));
 
     return {
       categorizedGroups: sortedCategories.map((cat) => ({
@@ -107,9 +124,9 @@ export function Sidebar({
         items: groups.get(cat) || [],
       })),
       uncategorizedSources: uncategorized,
-      existingCategories: sortedCategories,
+      existingCategories: allKnownCategories,
     };
-  }, [sources]);
+  }, [sources, customFolders]);
 
   const toggleCategoryCollapse = (category: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -124,23 +141,64 @@ export function Sidebar({
     });
   };
 
+  const persistCustomFolder = (name: string) => {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    setCustomFolders((prev) => {
+      if (prev.some((f) => f.toLowerCase() === trimmed.toLowerCase())) {
+        return prev;
+      }
+      const next = [...prev, trimmed];
+      try {
+        localStorage.setItem('rss_custom_folders', JSON.stringify(next));
+      } catch {
+        // Ignore storage errors
+      }
+      return next;
+    });
+  };
+
+  const handleCreateNewFolder = () => {
+    const trimmed = newFolderName.trim();
+    if (!trimmed) return;
+    persistCustomFolder(trimmed);
+    setNewCategory(trimmed);
+    setNewFolderName('');
+    setIsCreatingFolder(false);
+    setCategoryMenuOpen(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newUrl.trim() || isSubmitting) return;
 
+    const effectiveCategory = (isCreatingFolder && newFolderName.trim())
+      ? newFolderName.trim()
+      : newCategory.trim();
+    if (effectiveCategory) {
+      persistCustomFolder(effectiveCategory);
+    }
+
     setIsSubmitting(true);
-    const success = await onAddFeed(newUrl.trim(), newCategory.trim() || undefined);
+    const success = await onAddFeed(newUrl.trim(), effectiveCategory || undefined);
     setIsSubmitting(false);
 
     if (success) {
       setNewUrl('');
       setNewCategory('');
+      setNewFolderName('');
+      setIsCreatingFolder(false);
+      setCategoryMenuOpen(false);
       setInputOpen(false);
     }
   };
 
   const handleSaveCategoryEdit = (sourceId: string) => {
-    onUpdateSourceCategory(sourceId, editingCategoryValue.trim() || undefined);
+    const trimmed = editingCategoryValue.trim();
+    if (trimmed) {
+      persistCustomFolder(trimmed);
+    }
+    onUpdateSourceCategory(sourceId, trimmed || undefined);
     setEditingCategorySourceId(null);
     setEditingCategoryValue('');
   };
@@ -343,16 +401,125 @@ export function Sidebar({
             autoFocus
             className="w-full text-xs px-2.5 py-1.5 rounded bg-white dark:bg-[#121212] border border-gray-300 dark:border-neutral-700 text-gray-900 dark:text-neutral-100 placeholder:text-gray-400 dark:placeholder:text-neutral-500 focus:outline-none focus:border-orange-500"
           />
-          <input
-            id="add-feed-category-input"
-            type="text"
-            list="existing-rss-categories"
-            placeholder="Folder / Category (optional)"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            disabled={isSubmitting}
-            className="w-full text-xs px-2.5 py-1.5 rounded bg-white dark:bg-[#121212] border border-gray-300 dark:border-neutral-700 text-gray-900 dark:text-neutral-100 placeholder:text-gray-400 dark:placeholder:text-neutral-500 focus:outline-none focus:border-orange-500"
-          />
+          {isCreatingFolder ? (
+            <div id="add-feed-new-folder-row" className="flex items-center gap-1.5">
+              <input
+                id="add-feed-new-folder-input"
+                type="text"
+                placeholder="New folder name..."
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                disabled={isSubmitting}
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleCreateNewFolder();
+                  }
+                  if (e.key === 'Escape') {
+                    e.preventDefault();
+                    setIsCreatingFolder(false);
+                    setNewFolderName('');
+                  }
+                }}
+                className="flex-1 min-w-0 text-xs px-2.5 py-1.5 rounded bg-white dark:bg-[#121212] border border-orange-500 text-gray-900 dark:text-neutral-100 placeholder:text-gray-400 dark:placeholder:text-neutral-500 focus:outline-none"
+              />
+              <button
+                id="add-feed-new-folder-confirm-btn"
+                type="button"
+                onClick={handleCreateNewFolder}
+                disabled={!newFolderName.trim()}
+                className="text-xs px-2 py-1.5 rounded bg-orange-600 hover:bg-orange-500 text-white font-medium disabled:opacity-40"
+              >
+                Add
+              </button>
+              <button
+                id="add-feed-new-folder-cancel-btn"
+                type="button"
+                onClick={() => {
+                  setIsCreatingFolder(false);
+                  setNewFolderName('');
+                }}
+                className="text-xs px-1.5 py-1.5 text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <div id="add-feed-category-picker" className="relative">
+              <button
+                id="add-feed-category-trigger"
+                type="button"
+                disabled={isSubmitting}
+                onClick={() => setCategoryMenuOpen((v) => !v)}
+                className="w-full flex items-center justify-between text-xs px-2.5 py-1.5 rounded bg-white dark:bg-[#121212] border border-gray-300 dark:border-neutral-700 text-left hover:border-gray-400 dark:hover:border-neutral-600 focus:outline-none focus:border-orange-500 transition-colors"
+              >
+                <span className={newCategory ? 'text-gray-900 dark:text-neutral-100 truncate' : 'text-gray-400 dark:text-neutral-500 truncate'}>
+                  {newCategory || 'Folder / Category (optional)'}
+                </span>
+                <ChevronDown className={`w-3.5 h-3.5 text-gray-400 dark:text-neutral-500 shrink-0 transition-transform ${categoryMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {categoryMenuOpen && (
+                <div
+                  id="add-feed-category-menu"
+                  className="absolute left-0 right-0 top-full mt-1 z-30 rounded-lg border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-xl py-1 max-h-48 overflow-y-auto"
+                >
+                  {newCategory && (
+                    <button
+                      id="add-feed-category-none-btn"
+                      type="button"
+                      onClick={() => {
+                        setNewCategory('');
+                        setCategoryMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs text-gray-500 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-800 text-left"
+                    >
+                      <span>No Folder (optional)</span>
+                    </button>
+                  )}
+
+                  {existingCategories.map((cat) => (
+                    <button
+                      id={`add-feed-category-option-${toIdSlug(cat)}`}
+                      key={cat}
+                      type="button"
+                      onClick={() => {
+                        setNewCategory(cat);
+                        setCategoryMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs text-gray-800 dark:text-neutral-200 hover:bg-gray-100 dark:hover:bg-neutral-800 text-left"
+                    >
+                      <span className="flex items-center gap-1.5 truncate">
+                        <Folder className="w-3.5 h-3.5 text-orange-500 dark:text-orange-400 shrink-0" />
+                        <span className="truncate">{cat}</span>
+                      </span>
+                      {newCategory === cat && (
+                        <Check className="w-3.5 h-3.5 text-orange-500 dark:text-orange-400 shrink-0" />
+                      )}
+                    </button>
+                  ))}
+
+                  <div className="my-1 border-t border-gray-200 dark:border-neutral-800" />
+
+                  <button
+                    id="add-feed-new-folder-btn"
+                    type="button"
+                    onClick={() => {
+                      setCategoryMenuOpen(false);
+                      setIsCreatingFolder(true);
+                      setNewFolderName('');
+                    }}
+                    className="w-full flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-orange-600 dark:text-orange-400 hover:bg-orange-500/10 text-left"
+                  >
+                    <FolderPlus className="w-3.5 h-3.5 shrink-0" />
+                    <span>New Folder</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
           <div className="flex justify-end gap-2 pt-0.5">
             <button
               id="add-feed-cancel-btn"
